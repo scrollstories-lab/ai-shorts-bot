@@ -1,0 +1,23 @@
+name: CodziennyShort
+on:
+  schedule:
+    - cron: '0 8 * * *' # Automatycznie codziennie o 8:00 rano
+  workflow_dispatch: # To pozwala Ci też kliknąć "Run" ręcznie w każdej chwili
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Instalacja bibliotek
+        run: pip install -r requirements.txt
+      - name: Uruchomienie bota
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+        run: python main.py
+      - name: Upload wyniku
+        uses: actions/upload-artifact@v3
+        with:
+          name: gotowy-film
+          path: auto_shorts_final.mp4
